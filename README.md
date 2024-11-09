@@ -1,11 +1,19 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Dependency Injection
 
-To start the slide show:
+This presentation is about the Dependency Injection design pattern, created for the design patterns course at Stuttgart Media University. It covers the principles, benefits, and types of Dependency Injection with practical examples.
 
-- `npm install`
-- `npm run dev`
-- visit <http://localhost:3030>
+Made with [Slidev](https://sli.dev)
 
-Edit the [slides.md](./slides.md) to see the changes.
+## Open the presentation
 
-Learn more about Slidev at the [documentation](https://sli.dev/).
+You will need [Bun](https://bun.sh).
+Once installed you can open the presentation with the following command:
+
+```sh
+bun dev --open
+```
+alternatively, you can export it to a pdf file:
+
+```sh
+bun export
+```
