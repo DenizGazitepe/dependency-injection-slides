@@ -10,7 +10,6 @@ drawings:
 transition: slide-left
 mdc: true
 overviewSnapshots: true
-hideInToc: true
 lineNumbers: true
 ---
 
@@ -30,15 +29,6 @@ hideInToc: true
 # Table of Contents
 
 <Toc />
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<!--
-Here is another comment.
--->
 
 ---
 layout: quote
@@ -100,114 +90,151 @@ fetchData(processData); // Instead of controlling the flow directly, we pass con
 
 ---
 level: 2
+layout: image
+image: /man-fridge.jpg
+---
+
+---
+layout: center
+---
+
+```plantuml
+@startuml
+
+class Kitchen {
+    + main(args: String[]): void
+}
+
+class Chef {
+    - pantry: Pantry
+    + prepareMeal(): void
+}
+
+class Pantry {
+    + provideIngredients(): void
+}
+
+Kitchen --> Chef
+Chef --> Pantry
+
+@enduml
+```
+
+---
+level: 2
 title: DI in frameworks
 ---
 
-# Frameworks like Spring, use Dependency Injection to achieve IoC.
+# Java Spring example
 
 ````md magic-move
 ```java
-public class DIMagic {
+public class Kitchen {
   public static void main(String[] args) {
-    var spring = new AnnotationConfigApplicationContext(Meal.class, Drink.class);
-    var meal = spring.getBean(Meal.class);
-    meal.quenchThirst(); // What will happen?
+    var assistant = new AnnotationConfigApplicationContext(Chef.class, Pantry.class); // IoC Container
+    var chef = assistant.getBean(chef.class);
+    chef.prepareMeal(); // What's the output?
   }
 }
 
-class Meal {
-  private Drink drink;
+class Chef {
+  private Pantry pantry;
 
-  public void quenchThirst() {
-    drink.consume();
+  public void prepareMeal() {
+    pantry.provideIngredients();
+    System.out.println("Cooking the meal! ");
   }
 }
 
-class Drink {
-  public void consume() {
-    System.out.println("Gulp gulp gulp...");
+class Pantry {
+  public void provideIngredients() {
+    System.out.println("Providing fresh ingredients!");
   }
-} // code from this video: https://www.youtube.com/watch?v=gD3TWLkHw4w
+}
 ```
 
 ```java {5}
-public class DIMagic {
+public class Kitchen {
   public static void main(String[] args) {
-    var spring = new AnnotationConfigApplicationContext(Meal.class, Drink.class);
-    var meal = spring.getBean(Meal.class);
-    meal.quenchThirst(); // Error: NullPointerException
+    var assistant = new AnnotationConfigApplicationContext(Chef.class, Pantry.class); // IoC Container
+    var chef = assistant.getBean(chef.class);
+    chef.prepareMeal(); // Error: NullPointerException
   }
 }
 
-class Meal {
-  private Drink drink;
+class Chef {
+  private Pantry pantry;
 
-  public void quenchThirst() {
-    drink.consume();
+  public void prepareMeal() {
+    pantry.provideIngredients();
+    System.out.println("Cooking the meal! ");
   }
 }
 
-class Drink {
-  public void consume() {
-    System.out.println("Gulp gulp gulp...");
+class Pantry {
+  public void provideIngredients() {
+    System.out.println("Providing fresh ingredients!");
   }
-} // code from this video: https://www.youtube.com/watch?v=gD3TWLkHw4w
+}
 ```
 
 ```java {10}
-public class DIMagic {
+public class Kitchen {
   public static void main(String[] args) {
-    var spring = new AnnotationConfigApplicationContext(Meal.class, Drink.class);
-    var meal = spring.getBean(Meal.class);
-    meal.quenchThirst();
+    var assistant = new AnnotationConfigApplicationContext(Chef.class, Pantry.class); // IoC Container
+    var chef = assistant.getBean(chef.class);
+    chef.prepareMeal(); // Error: NullPointerException
   }
 }
 
-class Meal {
+class Chef {
   @Autowired
-  private Drink drink;
+  private Pantry pantry;
 
-  public void quenchThirst() {
-    drink.consume();
+  public void prepareMeal() {
+    pantry.provideIngredients();
+    System.out.println("Cooking the meal! ");
   }
 }
 
-class Drink {
-  public void consume() {
-    System.out.println("Gulp gulp gulp...");
+class Pantry {
+  public void provideIngredients() {
+    System.out.println("Providing fresh ingredients!");
   }
-} // code from this video: https://www.youtube.com/watch?v=gD3TWLkHw4w
+}
 ```
 
 ```java {5}
-public class DIMagic {
+public class Kitchen {
   public static void main(String[] args) {
-    var spring = new AnnotationConfigApplicationContext(Meal.class, Drink.class);
-    var meal = spring.getBean(Meal.class);
-    meal.quenchThirst(); // Gulp gulp gulp...
+    var assistant = new AnnotationConfigApplicationContext(Chef.class, Pantry.class); // IoC Container
+    var chef = assistant.getBean(chef.class);
+    chef.prepareMeal(); // Providing fresh ingredients! Cooking the meal!
   }
 }
 
-class Meal {
+class Chef {
   @Autowired
-  private Drink drink;
+  private Pantry pantry;
 
-  public void quenchThirst() {
-    drink.consume();
+  public void prepareMeal() {
+    pantry.provideIngredients();
+    System.out.println("Cooking the meal! ");
   }
 }
 
-class Drink {
-  public void consume() {
-    System.out.println("Gulp gulp gulp...");
+class Pantry {
+  public void provideIngredients() {
+    System.out.println("Providing fresh ingredients!");
   }
-} // code from this video: https://www.youtube.com/watch?v=gD3TWLkHw4w
+}
 ```
 ````
 
 <!--
 The drink field in the Meal class is never initialized, leading to a NullPointerException when drink.consume() is called in the quenchThirst method.
 -->
+
 
 ---
 title: manual Dependency Injection
@@ -237,7 +264,7 @@ level: 2
 level: 2
 ---
 
-# Types of manual Dependency Injection:
+# Types of manual Dependency Injection
 
 ````md magic-move
 ```java
@@ -351,9 +378,13 @@ level: 2
 # Pros
 
 - ✅ Testability
+  - Combined with the mocking pattern
 - ✅ Modularity
+  - Combined with the strategy pattern
 - ✅ Flexibility
+  - Easily swap out implementations without changing the client code.
 - ✅ Reusability
+  - Services can be reused across different clients and applications.
 
 ::right::
 
@@ -367,10 +398,21 @@ level: 2
 
 # Sources
 
-- [Martin Fowler - Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
-- [Martin Fowler - Inversion of Control](https://martinfowler.com/bliki/InversionOfControl.html)
-- [Cameron McKenzie - What is Dependency Injection?](https://www.youtube.com/watch?v=gD3TWLkHw4w)
-- [CodeAesthetic - Dependency Injection, The Best Pattern](https://www.youtube.com/watch?v=J1f5b4vcxCQ&t=1s)
+- \[1\] 
+  - M. Fowler, "Inversion of Control Containers and the Dependency Injection pattern," martinfowler.com, 2004. \[Online\]. Available: https://martinfowler.com/articles/injection.html. \[Accessed: Nov. 14, 2024\].
+- \[2\] 
+  - M. Fowler, "Inversion of Control," martinfowler.com, 2005. \[Online\]. Available: https://martinfowler.com/bliki/InversionOfControl.html. \[Accessed: Nov. 14, 2024\].
+- \[3\] 
+  - C. McKenzie, "What is Dependency Injection?," YouTube, 2019. \[Online\]. Available: https://www.youtube.com/watch?v=gD3TWLkHw4w. \[Accessed: Nov. 14, 2024\].
+- \[4\] 
+  - CodeAesthetic, "Dependency Injection, The Best Pattern," YouTube, 2020. \[Online\]. Available: https://www.youtube.com/watch?v=J1f5b4vcxCQ&t=1s. \[Accessed: Nov. 14, 2024\].
+
+
+---
+
+- \[5\] 
+  - CareerExperts, "A-Guide-to-Fridge-Storage-in-a-Commercial-Kitchen," example.com, 2022. \[Online\]. Available: https://www.careerexperts.co.uk/wp-content/uploads/2022/01/A-Guide-to-Fridge-Storage-in-a-Commercial-Kitchen.jpg. [Accessed: Nov. 14, 2024\].
+  
 
 ---
 layout: end
